@@ -1,5 +1,3 @@
-
-
 <?php
 /*
 * MyBB: Latest Threads Ticker
@@ -286,4 +284,3 @@ function latestthreads_ticker_index_start()
 }
 
 ?>
-
