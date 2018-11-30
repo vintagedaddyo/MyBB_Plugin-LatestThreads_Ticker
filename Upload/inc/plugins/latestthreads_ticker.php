@@ -106,7 +106,7 @@ text-decoration: none;
 }
 
 td.ticker a:hover {
-color: #000000;
+color: #DDDDDD;
 text-decoration: none;
 }',
 		'disporder' => '2',
