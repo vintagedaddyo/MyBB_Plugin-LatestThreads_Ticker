@@ -255,10 +255,10 @@ function latestthreads()
 {
 	global $mybb, $db, $latestthreads;
 
-	$max = $mybb->settings['latestthreads_ticker_max_threads'];
-	$exclude = $mybb->settings['latestthreads_ticker_exclude_forums'];
+	$max =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_max_threads']);
+	$exclude =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_exclude_forums']);
 
-	$query = $db->query("SELECT * FROM " . TABLE_PREFIX . "threads  WHERE `fid` NOT IN('$exclude') ORDER BY `tid` DESC LIMIT $max");
+	$query = $db->query("SELECT * FROM " . TABLE_PREFIX . "threads  WHERE `fid` NOT IN($exclude) ORDER BY `tid` DESC LIMIT $max");
 	
 	while ($result = $db->fetch_array($query))
 	{
