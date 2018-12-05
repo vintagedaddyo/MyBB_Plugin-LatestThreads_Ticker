@@ -255,11 +255,22 @@ function latestthreads()
 {
 	global $mybb, $db, $latestthreads;
 
-	$max =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_max_threads']);
-	$exclude =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_exclude_forums']);
+    $exclude_forums =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_exclude_forums']);
 
-	$query = $db->query("SELECT * FROM " . TABLE_PREFIX . "threads  WHERE `fid` NOT IN($exclude) ORDER BY `tid` DESC LIMIT $max");
-	
+    if($exclude_forums == NULL) 
+    {   
+    	$exclude_forums =  '27,28,33,37';
+    }
+
+    $max =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_max_threads']);
+
+    if($max == NULL) 
+    {
+    	$max =  '20';
+    }
+
+	$query = $db->query("SELECT * FROM " . TABLE_PREFIX . "threads  WHERE `fid` NOT IN($exclude_forums) ORDER BY `tid` DESC LIMIT $max");
+
 	while ($result = $db->fetch_array($query))
 	{
 		$latestthreads.= "<a href=\"showthread.php?tid={$result['tid']}\">" . htmlspecialchars_uni($result['subject']) . "</a>";
