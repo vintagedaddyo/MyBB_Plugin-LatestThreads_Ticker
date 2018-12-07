@@ -255,21 +255,25 @@ function latestthreads()
 {
 	global $mybb, $db, $latestthreads;
 
-    $exclude_forums =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_exclude_forums']);
+     $exclude_forums = explode(',',$mybb->settings['latestthreads_ticker_exclude_forums']);
+     $exclude_forums = array_map('intval', (array)$exclude_forums);
+     $exclude_forums = implode(',',$exclude_forums);
 
-    if($exclude_forums == NULL) 
-    {   
-    	$exclude_forums =  '27,28,33,37';
-    }
+     $where = '';
 
-    $max =  htmlspecialchars_uni($mybb->settings['latestthreads_ticker_max_threads']);
+     if($exclude_forums)
+     {
+     $where = "WHERE `fid` NOT IN($exclude_forums)";
+     }
 
-    if($max == NULL) 
-    {
-    	$max =  '20';
-    }
+     $max =  (int)$mybb->settings['latestthreads_ticker_max_threads'];
 
-	$query = $db->query("SELECT * FROM " . TABLE_PREFIX . "threads  WHERE `fid` NOT IN($exclude_forums) ORDER BY `tid` DESC LIMIT $max");
+     if($max < 1)
+     {
+     $max = 20;
+     }
+     
+    $query = $db->query("SELECT * FROM " . TABLE_PREFIX . "threads  $where ORDER BY `tid` DESC LIMIT $max");
 
 	while ($result = $db->fetch_array($query))
 	{
@@ -287,6 +291,7 @@ function latestthreads_ticker_index_start()
 	global $db, $mybb, $templates, $latestthreads, $latestthreads_ticker_tmplt, $lang;
 
 	$lang->load("latestthreads_ticker");
+
 	
 	if ($mybb->settings['latestthreads_ticker_enable_index'] == 1)
 	{
